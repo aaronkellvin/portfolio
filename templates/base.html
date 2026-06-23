@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="{% block meta_description %}Portfolio of Kellvin Aaron Ocampo — Aspiring Full Stack Web Developer{% endblock %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <title>{% block title %}Kellvin Aaron Ocampo — Portfolio{% endblock %}</title>
+</head>
+<body data-page="{{ active_page }}">
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+  <div class="site-bg" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+    <div class="mesh-blob mesh-blob-3"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-subrow">
+      <a href="{{ url_for('home') }}" class="nav-brand">
+        <span class="nav-brand-mark" aria-hidden="true">K</span>
+        <span class="nav-brand-text">Portfolio</span>
+      </a>
+
+      <ul class="nav-links" id="primary-nav">
+        <li><a href="{{ url_for('home') }}" data-nav="home" class="{{ 'active-nav' if active_page == 'home' else '' }}">Home</a></li>
+        <li><a href="{{ url_for('skills') }}" data-nav="skills" class="{{ 'active-nav' if active_page == 'skills' else '' }}">Skills</a></li>
+        <li><a href="{{ url_for('projects') }}" data-nav="projects" class="{{ 'active-nav' if active_page == 'projects' else '' }}">Projects</a></li>
+        <li><a href="{{ url_for('experience') }}" data-nav="experience" class="{{ 'active-nav' if active_page == 'experience' else '' }}">Experience</a></li>
+        <li><a href="{{ url_for('certifications') }}" data-nav="certifications" class="{{ 'active-nav' if active_page == 'certifications' else '' }}">Certifications</a></li>
+        <li><a href="{{ url_for('contact') }}" data-nav="contact" class="btn-nav-contact {{ 'active-nav' if active_page == 'contact' else '' }}">Contact</a></li>
+        <li class="nav-mobile-social">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+          <a href="https://linkedin.com/in/aaron-ocampo-7103a8312" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="mailto:aaronocampo985@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        </li>
+      </ul>
+
+      <div class="nav-social">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        <a href="https://linkedin.com/in/aaron-ocampo-7103a8312" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="mailto:aaronocampo985@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+      </div>
+
+      <button class="hamburger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav">
+        <i class="fa-solid fa-bars hamburger-icon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-backdrop" aria-hidden="true"></div>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <p class="site-footer-copy">&copy; 2026 Kellvin Aaron M. Ocampo. All rights reserved.</p>
+  </footer>
+
+  {% block modals %}{% endblock %}
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="hero" id="home">
+  <div class="hero-image-wrap reveal">
+    <div class="hero-image-frame">
+      <div class="hero-image-ring" aria-hidden="true"></div>
+      <div class="hero-image-placeholder">
+        <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Kellvin Aaron Ocampo" draggable="false">
+      </div>
+      <span class="hero-badge"><i class="fa-solid fa-circle"></i> Open to work</span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <span class="hero-greeting reveal">Hello there 👋</span>
+    <h1 class="reveal reveal-delay-1">I'm <span class="highlight">Kellvin Aaron M. Ocampo</span></h1>
+    <p class="hero-role reveal reveal-delay-2">Aspiring Full Stack Web Developer</p>
+
+    <p class="hero-description reveal reveal-delay-2">Detail-oriented developer with a solid foundation in Information Technology and hands-on full-stack experience. I build user-friendly applications and leverage AI tools to solve real-world problems.</p>
+
+    <div class="hero-buttons reveal reveal-delay-3">
+      <a href="{{ url_for('projects') }}" class="btn-primary magnetic-btn">View My Work <i class="fa-solid fa-arrow-right"></i></a>
+      <a href="{{ url_for('contact') }}" class="btn-secondary magnetic-btn">Get In Touch</a>
+    </div>
+
+    <div class="hero-stats reveal reveal-delay-3">
+      <span class="hero-stat"><i class="fa-solid fa-laptop-code"></i> Full Stack Web</span>
+      <span class="hero-stat"><i class="fa-solid fa-location-dot"></i> Calamba, Laguna</span>
+      <span class="hero-stat"><i class="fa-solid fa-graduation-cap"></i> BS Information Technology</span>
+    </div>
+  </div>
+</header>
+
+<section class="section home-preview-section">
+  <div class="section-title reveal">
+    <span class="section-kicker">Discover</span>
+    <h2>What I Do</h2>
+    <div class="underline"></div>
+  </div>
+
+  <div class="home-preview-grid reveal-stagger">
+    <a href="{{ url_for('skills') }}" class="home-preview-card reveal">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <h3>Skills</h3>
+      <p>Programming, frontend, backend, security, frameworks, and professional tools.</p>
+      <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="{{ url_for('projects') }}" class="home-preview-card reveal">
+      <i class="fa-solid fa-rocket"></i>
+      <h3>Projects</h3>
+      <p>Full-stack systems, AI integrations, and enterprise web applications.</p>
+      <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="{{ url_for('experience') }}" class="home-preview-card reveal">
+      <i class="fa-solid fa-briefcase"></i>
+      <h3>Experience</h3>
+      <p>Internship at PNP Maritime Group, Accenture Academy training, and education.</p>
+      <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="{{ url_for('certifications') }}" class="home-preview-card reveal">
+      <i class="fa-solid fa-medal"></i>
+      <h3>Certifications</h3>
+      <p>IT Specialist, Cisco, and industry credentials across development and cloud.</p>
+      <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+  </div>
+</section>
+{% endblock %}
