@@ -1,12 +1,15 @@
 from pathlib import Path
 
-from flask import Flask, abort, render_template, send_from_directory
+from flask import Flask, redirect, render_template, send_from_directory
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_ROOT = BASE_DIR / "public" / "static"
-UPLOAD_FOLDER = STATIC_ROOT / "uploads"
 RESUME_FILENAME = "resume.pdf"
-RESUME_PATH = UPLOAD_FOLDER / RESUME_FILENAME
+RESUME_CANDIDATE_PATHS = (
+    BASE_DIR / "assets" / RESUME_FILENAME,
+    STATIC_ROOT / "uploads" / RESUME_FILENAME,
+)
+RESUME_STATIC_URL = f"/static/uploads/{RESUME_FILENAME}"
 
 app = Flask(
     __name__,
@@ -22,11 +25,18 @@ GMAIL_COMPOSE_LINK = (
 )
 
 
+def get_resume_path():
+    for path in RESUME_CANDIDATE_PATHS:
+        try:
+            if path.is_file() and path.stat().st_size > 0:
+                return path
+        except OSError:
+            continue
+    return None
+
+
 def resume_exists():
-    try:
-        return RESUME_PATH.is_file() and RESUME_PATH.stat().st_size > 0
-    except OSError:
-        return False
+    return get_resume_path() is not None
 
 
 @app.context_processor
@@ -65,9 +75,10 @@ def certifications():
 
 
 def resume_size_mb():
-    if not resume_exists():
+    resume_path = get_resume_path()
+    if not resume_path:
         return None
-    return round(RESUME_PATH.stat().st_size / (1024 * 1024), 2)
+    return round(resume_path.stat().st_size / (1024 * 1024), 2)
 
 
 @app.route("/resume")
@@ -82,9 +93,12 @@ def resume():
 
 @app.route("/resume/file")
 def resume_file():
-    if not resume_exists():
-        abort(404)
-    return send_from_directory(str(UPLOAD_FOLDER), RESUME_FILENAME)
+    resume_path = get_resume_path()
+    if resume_path:
+        return send_from_directory(str(resume_path.parent), resume_path.name)
+
+    # On Vercel, files in public/ are served from the CDN, not the function filesystem.
+    return redirect(RESUME_STATIC_URL, code=302)
 
 
 @app.route("/contact")
