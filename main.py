@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 from flask import Flask, redirect, render_template, send_from_directory
 
@@ -36,7 +37,10 @@ def get_resume_path():
 
 
 def resume_exists():
-    return get_resume_path() is not None
+    if get_resume_path():
+        return True
+    # On Vercel, public/ files are on the CDN and may not exist in the function filesystem.
+    return bool(os.environ.get("VERCEL"))
 
 
 @app.context_processor
@@ -76,9 +80,11 @@ def certifications():
 
 def resume_size_mb():
     resume_path = get_resume_path()
-    if not resume_path:
-        return None
-    return round(resume_path.stat().st_size / (1024 * 1024), 2)
+    if resume_path:
+        return round(resume_path.stat().st_size / (1024 * 1024), 2)
+    if os.environ.get("VERCEL"):
+        return 0.09
+    return None
 
 
 @app.route("/resume")
