@@ -2,12 +2,18 @@ from pathlib import Path
 
 from flask import Flask, abort, render_template, send_from_directory
 
-app = Flask(__name__)
-
 BASE_DIR = Path(__file__).resolve().parent
-UPLOAD_FOLDER = BASE_DIR / "static" / "uploads"
+STATIC_ROOT = BASE_DIR / "public" / "static"
+UPLOAD_FOLDER = STATIC_ROOT / "uploads"
 RESUME_FILENAME = "resume.pdf"
 RESUME_PATH = UPLOAD_FOLDER / RESUME_FILENAME
+
+app = Flask(
+    __name__,
+    template_folder=str(BASE_DIR / "templates"),
+    static_folder=str(STATIC_ROOT),
+    static_url_path="/static",
+)
 
 CONTACT_EMAIL = "aaronocampo985@gmail.com"
 MAILTO_LINK = f"mailto:{CONTACT_EMAIL}"
@@ -17,7 +23,10 @@ GMAIL_COMPOSE_LINK = (
 
 
 def resume_exists():
-    return RESUME_PATH.is_file() and RESUME_PATH.stat().st_size > 0
+    try:
+        return RESUME_PATH.is_file() and RESUME_PATH.stat().st_size > 0
+    except OSError:
+        return False
 
 
 @app.context_processor
@@ -75,7 +84,7 @@ def resume():
 def resume_file():
     if not resume_exists():
         abort(404)
-    return send_from_directory(UPLOAD_FOLDER, RESUME_FILENAME)
+    return send_from_directory(str(UPLOAD_FOLDER), RESUME_FILENAME)
 
 
 @app.route("/contact")
