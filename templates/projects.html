@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}Projects — Kellvin Aaron Ocampo{% endblock %}
-{% block meta_description %}Featured projects by Kellvin Aaron Ocampo — MVIS, PRS Memo Tracking, ISO Documentation System, Kiosk, and Knightbot.{% endblock %}
+{% block meta_description %}Featured projects by Kellvin Aaron Ocampo — MVIS, PRS Memo Tracking, Ozzy Party Nest, ISO Documentation System, Kiosk, and Knightbot.{% endblock %}
 
 {% block content %}
 <section class="section page-section projects-section">
@@ -109,6 +109,26 @@
         <div class="project-actions">
           <button type="button" class="project-detail-trigger" data-project="5">View Details</button>
           <span class="project-inline-hint">AI Assistant</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-card reveal" data-project="6">
+      <div class="project-img-drop" data-project="6" tabindex="0" role="button" aria-label="Open Ozzy Party Nest project">
+        <img src="{{ url_for('static', filename='images/projects/ozzy-party-nest/1.png') }}" alt="Ozzy Party Nest preview">
+        <div class="project-overlay">View Project</div>
+      </div>
+      <div class="project-info">
+        <h3>Ozzy Party Nest</h3>
+        <span class="date"><i class="fa-regular fa-calendar"></i> 2025</span>
+        <div class="project-copy">
+          <p>Ozzy Party Nest is an individual web-based booking platform developed for a Sydney-based event rental business. The system enables customers to easily browse and book event-related services, including tables and chairs rental, professional sound system setup, and van rental with guest transportation services.</p>
+          <p>The website was developed using Python Flask for the backend and HTML, CSS, and JavaScript for the frontend and application functionality. It features a modern, responsive user interface, service catalog, and booking/contact functionality that allows customers to submit inquiries and reservations online.</p>
+          <p>The platform helps streamline the booking process, improve customer engagement, and provide a convenient digital presence for the business across Sydney, Australia.</p>
+        </div>
+        <div class="project-actions">
+          <button type="button" class="project-detail-trigger" data-project="6">View Details</button>
+          <span class="project-inline-hint">Gallery included</span>
         </div>
       </div>
     </article>

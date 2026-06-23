@@ -14,16 +14,23 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
+  {% block extra_head %}{% endblock %}
+
   <title>{% block title %}Kellvin Aaron Ocampo — Portfolio{% endblock %}</title>
 </head>
 <body data-page="{{ active_page }}">
   <div id="scroll-progress" aria-hidden="true"></div>
 
   <div class="site-bg" aria-hidden="true">
+    <div class="bg-animate">
+      <div class="bg-aurora"></div>
+    </div>
+    <div class="bg-veil"></div>
     <div class="mesh-blob mesh-blob-1"></div>
     <div class="mesh-blob mesh-blob-2"></div>
-    <div class="mesh-blob mesh-blob-3"></div>
   </div>
+
+  <div class="bubble-field" id="bubble-field" aria-hidden="true"></div>
 
   <nav class="navbar">
     <div class="nav-subrow">
@@ -38,18 +45,19 @@
         <li><a href="{{ url_for('projects') }}" data-nav="projects" class="{{ 'active-nav' if active_page == 'projects' else '' }}">Projects</a></li>
         <li><a href="{{ url_for('experience') }}" data-nav="experience" class="{{ 'active-nav' if active_page == 'experience' else '' }}">Experience</a></li>
         <li><a href="{{ url_for('certifications') }}" data-nav="certifications" class="{{ 'active-nav' if active_page == 'certifications' else '' }}">Certifications</a></li>
+        <li><a href="{{ url_for('resume') }}" data-nav="resume" class="{{ 'active-nav' if active_page == 'resume' else '' }}">Resume</a></li>
         <li><a href="{{ url_for('contact') }}" data-nav="contact" class="btn-nav-contact {{ 'active-nav' if active_page == 'contact' else '' }}">Contact</a></li>
         <li class="nav-mobile-social">
           <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
           <a href="https://linkedin.com/in/aaron-ocampo-7103a8312" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-          <a href="mailto:aaronocampo985@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+          <a href="{{ gmail_compose_link }}" target="_blank" rel="noopener noreferrer" class="email-link" data-mailto="{{ mailto_link }}" aria-label="Compose email to Kellvin"><i class="fa-solid fa-envelope"></i></a>
         </li>
       </ul>
 
       <div class="nav-social">
         <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
         <a href="https://linkedin.com/in/aaron-ocampo-7103a8312" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-        <a href="mailto:aaronocampo985@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        <a href="{{ gmail_compose_link }}" target="_blank" rel="noopener noreferrer" class="email-link" data-mailto="{{ mailto_link }}" aria-label="Compose email to Kellvin"><i class="fa-solid fa-envelope"></i></a>
       </div>
 
       <button class="hamburger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav">

@@ -8,11 +8,31 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initNavHighlight();
   initProjectModal();
+  initEmailLinks();
+  initBubbles();
+
+  function initEmailLinks() {
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+    document.querySelectorAll('.email-link').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        if (!isMobile) return;
+
+        const mailtoHref = link.dataset.mailto;
+        if (!mailtoHref) return;
+
+        event.preventDefault();
+        window.location.href = mailtoHref;
+      });
+    });
+  }
 
   function initScrollProgress() {
     const progress = document.getElementById('scroll-progress');
     const navbar = document.querySelector('.navbar');
     if (!progress && !navbar) return;
+
+    let ticking = false;
 
     const updateScrollUI = () => {
       const scrollTop = window.scrollY;
@@ -21,9 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (progress) progress.style.width = `${progressWidth}%`;
       if (navbar) navbar.classList.toggle('scrolled', scrollTop > 20);
+      ticking = false;
     };
 
-    window.addEventListener('scroll', updateScrollUI, { passive: true });
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updateScrollUI);
+    }, { passive: true });
+
     updateScrollUI();
   }
 
@@ -51,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.08, rootMargin: '0px 0px -20px 0px' }
     );
 
     revealElements.forEach((el) => revealObserver.observe(el));
@@ -149,7 +175,13 @@ document.addEventListener('DOMContentLoaded', () => {
         'projects/KIOSK/Screenshot_2026-06-13_032400.png', 'projects/KIOSK/Screenshot_2026-06-13_032409.png',
         'projects/KIOSK/Screenshot_2026-06-13_032415.png'
       ],
-      5: ['/static/images/projects/knightbot.png']
+      5: ['/static/images/projects/knightbot.png'],
+      6: [
+        '/static/images/projects/ozzy-party-nest/1.png',
+        '/static/images/projects/ozzy-party-nest/2.png',
+        '/static/images/projects/ozzy-party-nest/3.png',
+        '/static/images/projects/ozzy-party-nest/4.png'
+      ]
     };
 
     const modal = document.getElementById('slideshow-modal');
@@ -287,6 +319,255 @@ document.addEventListener('DOMContentLoaded', () => {
       if (event.key === 'ArrowRight') { currentSlideIndex += 1; showSlide(currentSlideIndex); }
       else if (event.key === 'ArrowLeft') { currentSlideIndex -= 1; showSlide(currentSlideIndex); }
       else if (event.key === 'Escape') closeProjectModal();
+    });
+  }
+
+  function initBubbles() {
+    const field = document.getElementById('bubble-field');
+    if (!field) return;
+
+    const isMobile = window.matchMedia('(max-width: 820px)').matches;
+    const bubbleCount = prefersReducedMotion ? 5 : (isMobile ? 6 : 12);
+    const palette = [
+      {
+        border: 'rgba(129, 140, 248, 0.38)',
+        glow: 'rgba(99, 102, 241, 0.2)',
+        fill: 'rgba(129, 140, 248, 0.14)',
+      },
+      {
+        border: 'rgba(45, 212, 191, 0.36)',
+        glow: 'rgba(45, 212, 191, 0.18)',
+        fill: 'rgba(45, 212, 191, 0.12)',
+      },
+      {
+        border: 'rgba(251, 146, 60, 0.34)',
+        glow: 'rgba(251, 146, 60, 0.16)',
+        fill: 'rgba(251, 146, 60, 0.1)',
+      },
+    ];
+
+    const bubbles = [];
+    let animationId = null;
+    let isPaused = document.hidden;
+
+    const randomBetween = (min, max) => min + Math.random() * (max - min);
+
+    const getContentBounds = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const horizontalPad = Math.max(vw * 0.05, 16);
+      const contentW = Math.min(1200, vw - horizontalPad * 2);
+      const left = (vw - contentW) / 2;
+      const buffer = 20;
+
+      return {
+        left: left - buffer,
+        right: left + contentW + buffer,
+        top: 84,
+        bottom: vh - 32,
+        vw,
+        vh,
+      };
+    };
+
+    const hasSideGutters = (bounds, radius) => {
+      return bounds.left >= radius + 10 || bounds.vw - bounds.right >= radius + 10;
+    };
+
+    const isInsideContent = (x, y, radius, bounds) => {
+      return (
+        x + radius > bounds.left &&
+        x - radius < bounds.right &&
+        y + radius > bounds.top &&
+        y - radius < bounds.bottom
+      );
+    };
+
+    const randomBubblePosition = (size) => {
+      const bounds = getContentBounds();
+      const radius = size / 2;
+
+      if (hasSideGutters(bounds, radius)) {
+        const useLeft = bounds.left >= radius + 10 &&
+          (bounds.vw - bounds.right < radius + 10 || Math.random() > 0.5);
+
+        const x = useLeft
+          ? randomBetween(radius, bounds.left - radius)
+          : randomBetween(bounds.right + radius, bounds.vw - radius);
+
+        return {
+          x,
+          y: randomBetween(bounds.top + radius, bounds.bottom - radius),
+        };
+      }
+
+      const x = randomBetween(radius, bounds.vw - radius);
+      const topStripMax = bounds.top + 56;
+      const bottomStripMin = bounds.bottom - 56;
+      const y = Math.random() > 0.5
+        ? randomBetween(bounds.top + radius, Math.min(topStripMax, bounds.bottom - radius))
+        : randomBetween(Math.max(bottomStripMin, bounds.top + radius), bounds.bottom - radius);
+
+      return { x, y };
+    };
+
+    const keepBubbleInZone = (bubble) => {
+      const bounds = getContentBounds();
+      const radius = bubble.size / 2;
+      const { vw, vh } = bounds;
+
+      if (hasSideGutters(bounds, radius)) {
+        if (isInsideContent(bubble.x, bubble.y, radius, bounds)) {
+          const distLeft = bubble.x - bounds.left;
+          const distRight = bounds.right - bubble.x;
+
+          if (distLeft < distRight) {
+            bubble.x = bounds.left - radius - 2;
+            bubble.vx = -Math.abs(bubble.vx);
+          } else {
+            bubble.x = bounds.right + radius + 2;
+            bubble.vx = Math.abs(bubble.vx);
+          }
+        }
+
+        if (bubble.x - radius < 0) {
+          bubble.x = radius;
+          bubble.vx = Math.abs(bubble.vx);
+        } else if (bubble.x + radius > vw) {
+          bubble.x = vw - radius;
+          bubble.vx = -Math.abs(bubble.vx);
+        }
+      } else if (isInsideContent(bubble.x, bubble.y, radius, bounds)) {
+        if (bubble.y < (bounds.top + bounds.bottom) / 2) {
+          bubble.y = bounds.top - radius - 2;
+          bubble.vy = -Math.abs(bubble.vy);
+        } else {
+          bubble.y = bounds.bottom + radius + 2;
+          bubble.vy = Math.abs(bubble.vy);
+        }
+
+        bubble.x = Math.min(Math.max(bubble.x, radius), vw - radius);
+      }
+
+      if (bubble.y - radius < bounds.top) {
+        bubble.y = bounds.top + radius;
+        bubble.vy = Math.abs(bubble.vy);
+      } else if (bubble.y + radius > bounds.bottom) {
+        bubble.y = bounds.bottom - radius;
+        bubble.vy = -Math.abs(bubble.vy);
+      }
+
+      if (bubble.y + radius > vh) {
+        bubble.y = vh - radius;
+        bubble.vy = -Math.abs(bubble.vy);
+      }
+    };
+
+    const spawnPopRing = (x, y, size) => {
+      const ring = document.createElement('span');
+      ring.className = 'bubble-pop-ring';
+      ring.style.left = `${x}px`;
+      ring.style.top = `${y}px`;
+      ring.style.width = `${size}px`;
+      ring.style.height = `${size}px`;
+      field.appendChild(ring);
+      ring.addEventListener('animationend', () => ring.remove(), { once: true });
+    };
+
+    const popBubble = (bubble) => {
+      if (bubble.popping) return;
+
+      bubble.popping = true;
+      bubble.el.classList.add('pop');
+      bubble.el.disabled = true;
+      spawnPopRing(bubble.x, bubble.y, bubble.size);
+
+      window.setTimeout(() => {
+        bubble.el.remove();
+        const index = bubbles.indexOf(bubble);
+        if (index !== -1) bubbles.splice(index, 1);
+        window.setTimeout(createBubble, randomBetween(700, 1800));
+      }, 420);
+    };
+
+    const createBubble = () => {
+      const size = randomBetween(isMobile ? 28 : 36, isMobile ? 50 : 76);
+      const position = randomBubblePosition(size);
+
+      if (!position) return;
+
+      const el = document.createElement('button');
+      const tone = palette[Math.floor(Math.random() * palette.length)];
+
+      el.type = 'button';
+      el.className = 'bubble';
+      el.setAttribute('aria-label', 'Pop bubble');
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.borderColor = tone.border;
+      el.style.background = `radial-gradient(circle at 32% 28%, rgba(255,255,255,0.38), ${tone.fill} 48%, rgba(45,212,191,0.06) 100%)`;
+      el.style.boxShadow = `inset 0 0 14px rgba(255,255,255,0.16), 0 10px 28px ${tone.glow}`;
+
+      const shimmer = document.createElement('span');
+      shimmer.className = 'bubble-shimmer';
+      shimmer.setAttribute('aria-hidden', 'true');
+      el.appendChild(shimmer);
+
+      const speedScale = prefersReducedMotion ? 0.25 : 1;
+
+      const bubble = {
+        el,
+        size,
+        x: position.x,
+        y: position.y,
+        vx: randomBetween(-0.38, 0.38) * speedScale,
+        vy: randomBetween(-0.38, 0.38) * speedScale,
+        popping: false,
+      };
+
+      el.style.left = `${bubble.x}px`;
+      el.style.top = `${bubble.y}px`;
+
+      el.addEventListener('click', (event) => {
+        event.stopPropagation();
+        popBubble(bubble);
+      });
+
+      field.appendChild(el);
+      bubbles.push(bubble);
+    };
+
+    const tick = () => {
+      if (!isPaused) {
+        bubbles.forEach((bubble) => {
+          if (bubble.popping) return;
+
+          bubble.x += bubble.vx;
+          bubble.y += bubble.vy;
+          keepBubbleInZone(bubble);
+
+          bubble.el.style.left = `${bubble.x}px`;
+          bubble.el.style.top = `${bubble.y}px`;
+        });
+      }
+
+      animationId = requestAnimationFrame(tick);
+    };
+
+    for (let i = 0; i < bubbleCount; i += 1) {
+      createBubble();
+    }
+
+    animationId = requestAnimationFrame(tick);
+
+    window.addEventListener('resize', () => {
+      bubbles.forEach((bubble) => {
+        if (!bubble.popping) keepBubbleInZone(bubble);
+      });
+    }, { passive: true });
+
+    document.addEventListener('visibilitychange', () => {
+      isPaused = document.hidden;
     });
   }
 });

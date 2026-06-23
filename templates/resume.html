@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Resume — Kellvin Aaron Ocampo{% endblock %}
+{% block meta_description %}View and download Kellvin Aaron Ocampo's resume.{% endblock %}
+
+{% block content %}
+<section class="section page-section resume-section">
+  <div class="page-header reveal">
+    <span class="section-kicker">CV</span>
+    <h1>My Resume</h1>
+    <div class="underline"></div>
+    <p class="page-intro">View or download my latest resume below.</p>
+    {% if resume_exists %}
+      <div class="resume-actions">
+        <a href="{{ url_for('resume_file') }}" target="_blank" rel="noopener noreferrer" class="btn-secondary resume-action-btn">
+          <i class="fa-solid fa-up-right-from-square"></i> Open in New Tab
+        </a>
+        <a href="{{ url_for('resume_file') }}" download class="btn-primary resume-action-btn">
+          <i class="fa-solid fa-download"></i> Download PDF
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="resume-layout reveal reveal-delay-1">
+    {% if resume_exists %}
+      <div
+        class="resume-viewer-panel"
+        id="resume-viewer-panel"
+        data-resume-url="{{ url_for('resume_file') }}"
+      >
+        <div id="resume-loading" class="resume-loading">
+          <p>Loading resume...</p>
+        </div>
+        <div id="resume-viewer" class="resume-viewer">
+          <div class="resume-pages" id="resume-pages"></div>
+        </div>
+        <div id="resume-error" class="resume-error" hidden>
+          <p>Unable to load resume preview right now.</p>
+          <p>Please use the download button above.</p>
+          <p class="resume-error-detail"></p>
+        </div>
+      </div>
+    {% else %}
+      <div class="resume-empty-state">
+        <i class="fa-solid fa-file-pdf"></i>
+        <h2>Resume not available</h2>
+        <p>My resume PDF will appear here once it is added to the site.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+  {% if resume_exists %}
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <script src="{{ url_for('static', filename='js/resume.js') }}"></script>
+  {% endif %}
+{% endblock %}

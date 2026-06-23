@@ -21,6 +21,7 @@
 
     <div class="hero-buttons reveal reveal-delay-3">
       <a href="{{ url_for('projects') }}" class="btn-primary magnetic-btn">View My Work <i class="fa-solid fa-arrow-right"></i></a>
+      <a href="{{ url_for('resume') }}" class="btn-secondary magnetic-btn">View Resume</a>
       <a href="{{ url_for('contact') }}" class="btn-secondary magnetic-btn">Get In Touch</a>
     </div>
 
@@ -62,6 +63,12 @@
       <i class="fa-solid fa-medal"></i>
       <h3>Certifications</h3>
       <p>IT Specialist, Cisco, and industry credentials across development and cloud.</p>
+      <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="{{ url_for('resume') }}" class="home-preview-card reveal">
+      <i class="fa-solid fa-file-pdf"></i>
+      <h3>Resume</h3>
+      <p>View and download my latest resume PDF on the site.</p>
       <span class="card-arrow">Explore <i class="fa-solid fa-arrow-right"></i></span>
     </a>
   </div>
