@@ -9,55 +9,83 @@
     <span class="section-kicker">CV</span>
     <h1>My Resume</h1>
     <div class="underline"></div>
-    <p class="page-intro">View or download my latest resume below.</p>
-    {% if resume_exists %}
-      <div class="resume-actions">
-        <a href="{{ resume_public_url }}" target="_blank" rel="noopener noreferrer" class="btn-secondary resume-action-btn">
-          <i class="fa-solid fa-up-right-from-square"></i> Open in New Tab
-        </a>
-        <a href="{{ resume_public_url }}" download class="btn-primary resume-action-btn">
-          <i class="fa-solid fa-download"></i> Download PDF
-        </a>
-      </div>
-    {% endif %}
+    <p class="page-intro">Upload a PDF to preview it instantly, or view the hosted resume below.</p>
+    <div class="resume-actions" id="resume-actions" hidden>
+      <a
+        href="{{ resume_public_url }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-secondary resume-action-btn"
+        id="resume-open-link"
+      >
+        <i class="fa-solid fa-up-right-from-square"></i> Open in New Tab
+      </a>
+      <a
+        href="{{ resume_public_url }}"
+        download
+        class="btn-primary resume-action-btn"
+        id="resume-download-link"
+      >
+        <i class="fa-solid fa-download"></i> Download PDF
+      </a>
+    </div>
   </div>
 
   <div class="resume-layout reveal reveal-delay-1">
-    {% if resume_exists %}
-      <div
-        class="resume-viewer-panel"
-        id="resume-viewer-panel"
-        data-resume-url="{{ resume_public_url }}"
-      >
-        <div id="resume-loading" class="resume-loading">
-          <p>Loading resume...</p>
-        </div>
-        <div id="resume-viewer" class="resume-viewer">
-          <div class="resume-pages" id="resume-pages"></div>
-        </div>
-        <div id="resume-error" class="resume-error" hidden>
-          <p>Unable to load resume preview right now.</p>
-          <p>Please use the download button above, or open the PDF directly.</p>
-          <p class="resume-error-detail"></p>
-          <a href="{{ resume_public_url }}" target="_blank" rel="noopener noreferrer" class="btn-primary resume-action-btn" style="margin-top: 1rem;">
-            Open Resume PDF
-          </a>
-        </div>
+    <div class="resume-upload-panel">
+      <label class="resume-upload-label" for="resume-file-input">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <span>Choose resume PDF</span>
+      </label>
+      <input
+        type="file"
+        id="resume-file-input"
+        class="resume-file-input"
+        accept="application/pdf,.pdf"
+      />
+      <p class="resume-upload-hint">PDF only, up to 5 MB. The preview appears immediately after you select a file.</p>
+      <p class="resume-upload-status" id="resume-upload-status" hidden></p>
+    </div>
+
+    <div
+      class="resume-viewer-panel"
+      id="resume-viewer-panel"
+      data-resume-url="{{ resume_public_url }}"
+      data-resume-static-url="{{ resume_static_url }}"
+      hidden
+    >
+      <div id="resume-loading" class="resume-loading">
+        <p>Loading resume...</p>
       </div>
-    {% else %}
-      <div class="resume-empty-state">
-        <i class="fa-solid fa-file-pdf"></i>
-        <h2>Resume not available</h2>
-        <p>Add your PDF to <code>public/static/uploads/resume.pdf</code>, then commit and push to redeploy.</p>
+      <div id="resume-viewer" class="resume-viewer">
+        <div class="resume-pages" id="resume-pages"></div>
       </div>
-    {% endif %}
+      <div id="resume-error" class="resume-error" hidden>
+        <p>Unable to load resume preview right now.</p>
+        <p>Please use the download button above, or open the PDF directly.</p>
+        <p class="resume-error-detail"></p>
+        <a
+          href="{{ resume_public_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary resume-action-btn resume-error-open-link"
+          style="margin-top: 1rem;"
+        >
+          Open Resume PDF
+        </a>
+      </div>
+    </div>
+
+    <div class="resume-empty-state" id="resume-empty-state">
+      <i class="fa-solid fa-file-pdf"></i>
+      <h2>No resume loaded yet</h2>
+      <p>Upload a PDF above to preview it here, or commit your resume to <code>public/static/uploads/resume.pdf</code> and <code>assets/resume.pdf</code>, then redeploy.</p>
+    </div>
   </div>
 </section>
 {% endblock %}
 
 {% block scripts %}
-  {% if resume_exists %}
-    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-    <script src="{{ url_for('static', filename='js/resume.js') }}"></script>
-  {% endif %}
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script src="{{ url_for('static', filename='js/resume.js') }}"></script>
 {% endblock %}

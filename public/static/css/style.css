@@ -467,7 +467,8 @@ main [tabindex]:not([tabindex="-1"]),
 main .project-img-drop,
 main .home-preview-card,
 main .resume-viewer-panel,
-main .resume-layout {
+main .resume-layout,
+main .resume-upload-panel {
   pointer-events: auto;
 }
 
@@ -1350,6 +1351,67 @@ main .resume-layout {
 .resume-layout {
   max-width: 980px;
   margin: 0 auto;
+}
+
+.resume-upload-panel {
+  margin-bottom: 1.25rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  text-align: center;
+}
+
+.resume-upload-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--accent);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.resume-upload-label:hover {
+  border-color: var(--accent-2);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.resume-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.resume-upload-hint {
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.resume-upload-status {
+  margin: 0.75rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.resume-upload-status.is-success {
+  color: #7dffb0;
+}
+
+.resume-upload-status.is-error {
+  color: #ff7a7a;
 }
 
 .resume-actions {

@@ -1,12 +1,14 @@
 Place your resume PDF here as: resume.pdf
 
-Full path in this project:
-  public/static/uploads/resume.pdf
+Full paths in this project:
+  public/static/uploads/resume.pdf   (served by Vercel CDN)
+  assets/resume.pdf                  (bundled with the Python function)
 
-After adding or updating the file:
-  1. Save resume.pdf in this folder
+Keep both files in sync. After adding or updating:
+  1. Copy the same PDF to both paths above
   2. Commit and push to GitHub
   3. Wait for Vercel to redeploy
 
-The resume will be available at:
-  /static/uploads/resume.pdf
+The resume is loaded from:
+  /resume/pdf                        (Flask, works on Vercel via assets/)
+  /static/uploads/resume.pdf         (CDN fallback)

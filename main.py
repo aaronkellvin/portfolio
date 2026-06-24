@@ -1,14 +1,16 @@
 from pathlib import Path
 import os
 
-from flask import Flask, redirect, render_template, send_from_directory
+from flask import Flask, jsonify, redirect, render_template, request, send_from_directory
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_ROOT = BASE_DIR / "public" / "static"
 RESUME_FILENAME = "resume.pdf"
 RESUME_PUBLIC_PATH = STATIC_ROOT / "uploads" / RESUME_FILENAME
 RESUME_PUBLIC_URL = "/static/uploads/resume.pdf"
+RESUME_SERVE_URL = "/resume/pdf"
 RESUME_FALLBACK_PATH = BASE_DIR / "assets" / RESUME_FILENAME
+MAX_RESUME_BYTES = 5 * 1024 * 1024
 
 app = Flask(
     __name__,
@@ -25,7 +27,8 @@ GMAIL_COMPOSE_LINK = (
 
 
 def get_resume_path():
-    for path in (RESUME_PUBLIC_PATH, RESUME_FALLBACK_PATH):
+    # assets/ is bundled with the Vercel Python function; public/ is CDN-only.
+    for path in (RESUME_FALLBACK_PATH, RESUME_PUBLIC_PATH):
         try:
             if path.is_file() and path.stat().st_size > 0:
                 return path
@@ -37,7 +40,7 @@ def get_resume_path():
 def resume_is_available():
     if get_resume_path():
         return True
-    # On Vercel, public/ files are served from the CDN when committed to git.
+    # public/ files may exist on the CDN even when absent from the lambda filesystem.
     return bool(os.environ.get("VERCEL_ENV"))
 
 
@@ -48,7 +51,8 @@ def inject_contact():
         "mailto_link": MAILTO_LINK,
         "gmail_compose_link": GMAIL_COMPOSE_LINK,
         "has_resume": resume_is_available(),
-        "resume_public_url": RESUME_PUBLIC_URL,
+        "resume_public_url": RESUME_SERVE_URL,
+        "resume_static_url": RESUME_PUBLIC_URL,
     }
 
 
@@ -90,18 +94,71 @@ def resume():
         "resume.html",
         active_page="resume",
         resume_exists=resume_is_available(),
-        resume_public_url=RESUME_PUBLIC_URL,
+        resume_public_url=RESUME_SERVE_URL,
+        resume_static_url=RESUME_PUBLIC_URL,
         resume_size_mb=resume_size_mb(),
     )
 
 
-@app.route("/resume/file")
-def resume_file():
+@app.route("/resume/pdf")
+def resume_pdf():
     resume_path = get_resume_path()
     if resume_path:
-        return send_from_directory(str(resume_path.parent), resume_path.name)
+        return send_from_directory(
+            str(resume_path.parent),
+            resume_path.name,
+            mimetype="application/pdf",
+            max_age=0,
+        )
 
-    return redirect(RESUME_PUBLIC_URL, code=302)
+    return redirect(RESUME_PUBLIC_URL, code=307)
+
+
+@app.route("/resume/file")
+def resume_file():
+    return resume_pdf()
+
+
+@app.route("/resume/upload", methods=["POST"])
+def resume_upload():
+    uploaded = request.files.get("resume_file")
+    if not uploaded or not uploaded.filename:
+        return jsonify({"error": "No file selected."}), 400
+
+    if not uploaded.filename.lower().endswith(".pdf"):
+        return jsonify({"error": "Only PDF files are allowed."}), 400
+
+    data = uploaded.read()
+    if not data:
+        return jsonify({"error": "File is empty."}), 400
+    if len(data) > MAX_RESUME_BYTES:
+        return jsonify({"error": "File must be 5 MB or smaller."}), 400
+
+    try:
+        RESUME_PUBLIC_PATH.parent.mkdir(parents=True, exist_ok=True)
+        RESUME_PUBLIC_PATH.write_bytes(data)
+        RESUME_FALLBACK_PATH.parent.mkdir(parents=True, exist_ok=True)
+        RESUME_FALLBACK_PATH.write_bytes(data)
+        return jsonify(
+            {
+                "ok": True,
+                "saved": True,
+                "url": RESUME_SERVE_URL,
+                "static_url": RESUME_PUBLIC_URL,
+                "size_mb": round(len(data) / (1024 * 1024), 2),
+            }
+        )
+    except OSError:
+        return jsonify(
+            {
+                "ok": True,
+                "saved": False,
+                "message": (
+                    "Preview is ready in your browser. "
+                    "Permanent hosting requires saving locally or committing the file to git."
+                ),
+            }
+        )
 
 
 @app.route("/contact")
