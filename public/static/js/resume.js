@@ -12,6 +12,7 @@
 
   const resumeServeUrl = panel.dataset.resumeUrl || '/resume/pdf';
   const staticResumeUrl = panel.dataset.resumeStaticUrl || '/static/uploads/resume.pdf';
+  const cdnResumeUrl = panel.dataset.resumeCdnUrl || '';
   const resumeViewer = document.getElementById('resume-viewer');
   const resumeLoading = document.getElementById('resume-loading');
   const resumeError = document.getElementById('resume-error');
@@ -102,15 +103,20 @@
   }
 
   async function fetchResumeArrayBuffer() {
-    const urls = [resumeServeUrl, staticResumeUrl].filter(
+    const urls = [resumeServeUrl, staticResumeUrl, cdnResumeUrl].filter(
       (url, index, list) => url && list.indexOf(url) === index
     );
 
     let lastError = null;
 
     for (const url of urls) {
+      const isExternal = /^https?:\/\//i.test(url);
+
       try {
-        const response = await fetch(url, { cache: 'no-store' });
+        const response = await fetch(url, {
+          cache: 'no-store',
+          credentials: isExternal ? 'omit' : 'same-origin',
+        });
         if (!response.ok) {
           lastError = new Error(`HTTP ${response.status} for ${url}`);
           continue;
@@ -299,7 +305,7 @@
     console.warn('Hosted resume unavailable:', error);
     showEmptyState();
     setUploadStatus(
-      'No hosted resume found yet. Upload a PDF above, or commit public/static/uploads/resume.pdf and assets/resume.pdf, then redeploy.',
+      'Could not load the hosted resume automatically. Upload a PDF above, or use the production site URL if this preview requires Vercel login.',
       ''
     );
   });

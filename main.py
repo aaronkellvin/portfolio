@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 
-from flask import Flask, jsonify, redirect, render_template, request, send_from_directory
+from flask import Flask, Response, jsonify, redirect, render_template, request, send_from_directory
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_ROOT = BASE_DIR / "public" / "static"
@@ -10,6 +10,7 @@ RESUME_PUBLIC_PATH = STATIC_ROOT / "uploads" / RESUME_FILENAME
 RESUME_PUBLIC_URL = "/static/uploads/resume.pdf"
 RESUME_SERVE_URL = "/resume/pdf"
 RESUME_FALLBACK_PATH = BASE_DIR / "assets" / RESUME_FILENAME
+RESUME_CDN_URL = "https://cdn.jsdelivr.net/gh/aaronkellvin/portfolio@main/assets/resume.pdf"
 MAX_RESUME_BYTES = 5 * 1024 * 1024
 
 app = Flask(
@@ -53,6 +54,7 @@ def inject_contact():
         "has_resume": resume_is_available(),
         "resume_public_url": RESUME_SERVE_URL,
         "resume_static_url": RESUME_PUBLIC_URL,
+        "resume_cdn_url": RESUME_CDN_URL,
     }
 
 
@@ -96,6 +98,7 @@ def resume():
         resume_exists=resume_is_available(),
         resume_public_url=RESUME_SERVE_URL,
         resume_static_url=RESUME_PUBLIC_URL,
+        resume_cdn_url=RESUME_CDN_URL,
         resume_size_mb=resume_size_mb(),
     )
 
@@ -104,11 +107,13 @@ def resume():
 def resume_pdf():
     resume_path = get_resume_path()
     if resume_path:
-        return send_from_directory(
-            str(resume_path.parent),
-            resume_path.name,
+        return Response(
+            resume_path.read_bytes(),
             mimetype="application/pdf",
-            max_age=0,
+            headers={
+                "Content-Disposition": "inline; filename=resume.pdf",
+                "Cache-Control": "public, max-age=3600",
+            },
         )
 
     return redirect(RESUME_PUBLIC_URL, code=307)
