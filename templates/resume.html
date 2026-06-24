@@ -12,10 +12,10 @@
     <p class="page-intro">View or download my latest resume below.</p>
     {% if resume_exists %}
       <div class="resume-actions">
-        <a href="{{ url_for('resume_file') }}" target="_blank" rel="noopener noreferrer" class="btn-secondary resume-action-btn">
+        <a href="{{ resume_public_url }}" target="_blank" rel="noopener noreferrer" class="btn-secondary resume-action-btn">
           <i class="fa-solid fa-up-right-from-square"></i> Open in New Tab
         </a>
-        <a href="{{ url_for('resume_file') }}" download class="btn-primary resume-action-btn">
+        <a href="{{ resume_public_url }}" download class="btn-primary resume-action-btn">
           <i class="fa-solid fa-download"></i> Download PDF
         </a>
       </div>
@@ -27,7 +27,7 @@
       <div
         class="resume-viewer-panel"
         id="resume-viewer-panel"
-        data-resume-url="{{ url_for('resume_file') }}"
+        data-resume-url="{{ resume_public_url }}"
       >
         <div id="resume-loading" class="resume-loading">
           <p>Loading resume...</p>
@@ -37,15 +37,18 @@
         </div>
         <div id="resume-error" class="resume-error" hidden>
           <p>Unable to load resume preview right now.</p>
-          <p>Please use the download button above.</p>
+          <p>Please use the download button above, or open the PDF directly.</p>
           <p class="resume-error-detail"></p>
+          <a href="{{ resume_public_url }}" target="_blank" rel="noopener noreferrer" class="btn-primary resume-action-btn" style="margin-top: 1rem;">
+            Open Resume PDF
+          </a>
         </div>
       </div>
     {% else %}
       <div class="resume-empty-state">
         <i class="fa-solid fa-file-pdf"></i>
         <h2>Resume not available</h2>
-        <p>My resume PDF will appear here once it is added to the site.</p>
+        <p>Add your PDF to <code>public/static/uploads/resume.pdf</code>, then commit and push to redeploy.</p>
       </div>
     {% endif %}
   </div>

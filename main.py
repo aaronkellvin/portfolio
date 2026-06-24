@@ -6,11 +6,9 @@ from flask import Flask, redirect, render_template, send_from_directory
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_ROOT = BASE_DIR / "public" / "static"
 RESUME_FILENAME = "resume.pdf"
-RESUME_CANDIDATE_PATHS = (
-    BASE_DIR / "assets" / RESUME_FILENAME,
-    STATIC_ROOT / "uploads" / RESUME_FILENAME,
-)
-RESUME_STATIC_URL = f"/static/uploads/{RESUME_FILENAME}"
+RESUME_PUBLIC_PATH = STATIC_ROOT / "uploads" / RESUME_FILENAME
+RESUME_PUBLIC_URL = "/static/uploads/resume.pdf"
+RESUME_FALLBACK_PATH = BASE_DIR / "assets" / RESUME_FILENAME
 
 app = Flask(
     __name__,
@@ -27,7 +25,7 @@ GMAIL_COMPOSE_LINK = (
 
 
 def get_resume_path():
-    for path in RESUME_CANDIDATE_PATHS:
+    for path in (RESUME_PUBLIC_PATH, RESUME_FALLBACK_PATH):
         try:
             if path.is_file() and path.stat().st_size > 0:
                 return path
@@ -36,11 +34,11 @@ def get_resume_path():
     return None
 
 
-def resume_exists():
+def resume_is_available():
     if get_resume_path():
         return True
-    # On Vercel, public/ files are on the CDN and may not exist in the function filesystem.
-    return bool(os.environ.get("VERCEL"))
+    # On Vercel, public/ files are served from the CDN when committed to git.
+    return bool(os.environ.get("VERCEL_ENV"))
 
 
 @app.context_processor
@@ -49,7 +47,8 @@ def inject_contact():
         "contact_email": CONTACT_EMAIL,
         "mailto_link": MAILTO_LINK,
         "gmail_compose_link": GMAIL_COMPOSE_LINK,
-        "has_resume": resume_exists(),
+        "has_resume": resume_is_available(),
+        "resume_public_url": RESUME_PUBLIC_URL,
     }
 
 
@@ -82,8 +81,6 @@ def resume_size_mb():
     resume_path = get_resume_path()
     if resume_path:
         return round(resume_path.stat().st_size / (1024 * 1024), 2)
-    if os.environ.get("VERCEL"):
-        return 0.09
     return None
 
 
@@ -92,7 +89,8 @@ def resume():
     return render_template(
         "resume.html",
         active_page="resume",
-        resume_exists=resume_exists(),
+        resume_exists=resume_is_available(),
+        resume_public_url=RESUME_PUBLIC_URL,
         resume_size_mb=resume_size_mb(),
     )
 
@@ -103,8 +101,7 @@ def resume_file():
     if resume_path:
         return send_from_directory(str(resume_path.parent), resume_path.name)
 
-    # On Vercel, files in public/ are served from the CDN, not the function filesystem.
-    return redirect(RESUME_STATIC_URL, code=302)
+    return redirect(RESUME_PUBLIC_URL, code=302)
 
 
 @app.route("/contact")

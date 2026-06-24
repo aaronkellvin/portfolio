@@ -2,7 +2,8 @@
   const panel = document.getElementById('resume-viewer-panel');
   if (!panel) return;
 
-  const resumeUrl = panel.dataset.resumeUrl;
+  const resumeUrl = panel.dataset.resumeUrl || '/static/uploads/resume.pdf';
+  const staticResumeUrl = '/static/uploads/resume.pdf';
   const resumeViewer = document.getElementById('resume-viewer');
   const resumeLoading = document.getElementById('resume-loading');
   const resumeError = document.getElementById('resume-error');
@@ -40,9 +41,22 @@
   }
 
   async function fetchResumeArrayBuffer() {
-    const response = await fetch(resumeUrl, { cache: 'no-store' });
-    if (!response.ok) throw new Error('Failed to fetch resume file');
-    return response.arrayBuffer();
+    const urls = [resumeUrl, staticResumeUrl].filter(
+      (url, index, list) => url && list.indexOf(url) === index
+    );
+
+    for (const url of urls) {
+      try {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (response.ok) {
+          return response.arrayBuffer();
+        }
+      } catch (error) {
+        console.warn('Resume fetch failed for', url, error);
+      }
+    }
+
+    throw new Error('Failed to fetch resume file');
   }
 
   function getRenderWidth() {
