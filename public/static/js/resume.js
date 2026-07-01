@@ -1,14 +1,12 @@
 (function () {
   const panel = document.getElementById('resume-viewer-panel');
-  const fileInput = document.getElementById('resume-file-input');
-  const uploadStatus = document.getElementById('resume-upload-status');
   const emptyState = document.getElementById('resume-empty-state');
   const actionsRow = document.getElementById('resume-actions');
   const openLink = document.getElementById('resume-open-link');
   const downloadLink = document.getElementById('resume-download-link');
   const errorOpenLink = document.querySelector('.resume-error-open-link');
 
-  if (!panel || !fileInput) return;
+  if (!panel) return;
 
   const resumeServeUrl = panel.dataset.resumeUrl || '/resume/pdf';
   const staticResumeUrl = panel.dataset.resumeStaticUrl || '/static/uploads/resume.pdf';
@@ -17,9 +15,6 @@
   const resumeLoading = document.getElementById('resume-loading');
   const resumeError = document.getElementById('resume-error');
   const pagesRoot = document.getElementById('resume-pages');
-
-  let previewObjectUrl = null;
-  let activeResumeUrl = resumeServeUrl;
 
   function setResumeUIState({ loading = false, hasError = false }) {
     if (resumeLoading) resumeLoading.hidden = !loading;
@@ -40,14 +35,6 @@
     detailNode.textContent = detail;
   }
 
-  function setUploadStatus(message, type) {
-    if (!uploadStatus) return;
-    uploadStatus.hidden = !message;
-    uploadStatus.textContent = message || '';
-    uploadStatus.classList.remove('is-success', 'is-error');
-    if (type) uploadStatus.classList.add(type);
-  }
-
   function showViewer() {
     panel.hidden = false;
     if (emptyState) emptyState.hidden = true;
@@ -62,7 +49,6 @@
   }
 
   function updateActionLinks(url, filename) {
-    activeResumeUrl = url;
     [openLink, downloadLink, errorOpenLink].forEach((link) => {
       if (!link) return;
       link.href = url;
@@ -70,13 +56,6 @@
         link.download = filename || 'resume.pdf';
       }
     });
-  }
-
-  function revokePreviewUrl() {
-    if (previewObjectUrl) {
-      URL.revokeObjectURL(previewObjectUrl);
-      previewObjectUrl = null;
-    }
   }
 
   function getPdfjsRuntime() {
@@ -226,87 +205,8 @@
     await loadResumeFromArrayBuffer(pdfData);
   }
 
-  function isPdfFile(file) {
-    if (!file) return false;
-    const name = file.name.toLowerCase();
-    return file.type === 'application/pdf' || name.endsWith('.pdf');
-  }
-
-  async function uploadResumeToServer(file) {
-    const formData = new FormData();
-    formData.append('resume_file', file, file.name);
-
-    const response = await fetch('/resume/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(payload.error || 'Upload failed.');
-    }
-
-    return payload;
-  }
-
-  async function handleFileSelection(file) {
-    if (!isPdfFile(file)) {
-      setUploadStatus('Please choose a PDF file.', 'is-error');
-      fileInput.value = '';
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadStatus('File must be 5 MB or smaller.', 'is-error');
-      fileInput.value = '';
-      return;
-    }
-
-    setUploadStatus('Rendering preview...', '');
-    showViewer();
-
-    revokePreviewUrl();
-    previewObjectUrl = URL.createObjectURL(file);
-    updateActionLinks(previewObjectUrl, file.name);
-
-    try {
-      const pdfData = await file.arrayBuffer();
-      await loadResumeFromArrayBuffer(pdfData);
-      setUploadStatus('Preview ready.', 'is-success');
-    } catch (error) {
-      setUploadStatus('Could not render this PDF.', 'is-error');
-      return;
-    }
-
-    try {
-      const result = await uploadResumeToServer(file);
-      if (result.saved) {
-        updateActionLinks(result.url || resumeServeUrl, file.name);
-        revokePreviewUrl();
-        setUploadStatus('Resume saved and preview updated.', 'is-success');
-      } else if (result.message) {
-        setUploadStatus(result.message, 'is-success');
-      }
-    } catch (error) {
-      setUploadStatus(
-        'Preview is ready. Server save is unavailable on this deployment.',
-        'is-success'
-      );
-    }
-  }
-
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files && fileInput.files[0];
-    if (!file) return;
-    handleFileSelection(file);
-  });
-
   bootHostedResume().catch((error) => {
     console.warn('Hosted resume unavailable:', error);
     showEmptyState();
-    setUploadStatus(
-      'Could not load the hosted resume automatically. Upload a PDF above, or use the production site URL if this preview requires Vercel login.',
-      ''
-    );
   });
 })();

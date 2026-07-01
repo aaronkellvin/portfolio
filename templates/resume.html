@@ -9,7 +9,7 @@
     <span class="section-kicker">CV</span>
     <h1>My Resume</h1>
     <div class="underline"></div>
-    <p class="page-intro">Upload a PDF to preview it instantly, or view the hosted resume below.</p>
+    <p class="page-intro">View or download my latest resume below.</p>
     <div class="resume-actions" id="resume-actions" hidden>
       <a
         href="{{ resume_public_url }}"
@@ -32,21 +32,6 @@
   </div>
 
   <div class="resume-layout reveal reveal-delay-1">
-    <div class="resume-upload-panel">
-      <label class="resume-upload-label" for="resume-file-input">
-        <i class="fa-solid fa-cloud-arrow-up"></i>
-        <span>Choose resume PDF</span>
-      </label>
-      <input
-        type="file"
-        id="resume-file-input"
-        class="resume-file-input"
-        accept="application/pdf,.pdf"
-      />
-      <p class="resume-upload-hint">PDF only, up to 5 MB. The preview appears immediately after you select a file.</p>
-      <p class="resume-upload-status" id="resume-upload-status" hidden></p>
-    </div>
-
     <div
       class="resume-viewer-panel"
       id="resume-viewer-panel"
@@ -79,8 +64,8 @@
 
     <div class="resume-empty-state" id="resume-empty-state">
       <i class="fa-solid fa-file-pdf"></i>
-      <h2>No resume loaded yet</h2>
-      <p>Upload a PDF above to preview it here, or commit your resume to <code>public/static/uploads/resume.pdf</code> and <code>assets/resume.pdf</code>, then redeploy.</p>
+      <h2>Resume not available</h2>
+      <p>Please try again later or use the download link when it becomes available.</p>
     </div>
   </div>
 </section>

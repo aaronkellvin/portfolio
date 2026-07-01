@@ -185,45 +185,181 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const modal = document.getElementById('slideshow-modal');
-    const modalImg = document.getElementById('modal-img');
+    const coverflowTrack = document.getElementById('gallery-coverflow-track');
     const closeBtn = document.querySelector('.close-modal');
     const prevBtn = document.getElementById('modal-prev');
     const nextBtn = document.getElementById('modal-next');
     const modalTitle = document.getElementById('project-modal-title');
     const modalDate = document.getElementById('project-modal-date');
     const modalCopy = document.getElementById('project-modal-copy');
-    const modalThumbs = document.getElementById('project-thumbs');
+    const slideCount = document.getElementById('project-slide-count');
 
-    if (!modal || !modalImg) return;
+    const coverflow = document.getElementById('gallery-coverflow-track')?.parentElement;
+
+    if (!modal || !coverflowTrack) return;
 
     let currentProjectId = null;
     let currentSlideIndex = 0;
+    let coverflowSlides = [];
 
     const resolveImage = (path) => (path.startsWith('/') ? path : `${baseUrl}${path}`);
 
-    const renderProjectThumbs = (projectId) => {
-      if (!modalThumbs) return;
+    const getImageBounds = () => {
+      const compact = window.matchMedia('(max-width: 820px)').matches;
+      const galleryViewport = coverflowTrack.closest('.gallery-viewport');
+      const coverflowEl = coverflowTrack.parentElement;
 
-      modalThumbs.innerHTML = '';
+      const viewportWidth = coverflowEl?.clientWidth || galleryViewport?.clientWidth || window.innerWidth;
+      const viewportHeight = coverflowEl?.clientHeight || galleryViewport?.clientHeight || window.innerHeight;
+
+      const navPadding = compact ? 56 : 72;
+      const counterSpace = 28;
+
+      return {
+        maxWidth: Math.max(viewportWidth - navPadding, 280),
+        maxHeight: Math.max(viewportHeight - counterSpace, 220),
+      };
+    };
+
+    const fitSlideImage = (img) => {
+      const { maxWidth, maxHeight } = getImageBounds();
+      const naturalWidth = img.naturalWidth;
+      const naturalHeight = img.naturalHeight;
+      if (!naturalWidth || !naturalHeight) return;
+
+      const scale = Math.min(maxWidth / naturalWidth, maxHeight / naturalHeight, 1);
+      const width = Math.round(naturalWidth * scale);
+      const height = Math.round(naturalHeight * scale);
+
+      img.style.width = `${width}px`;
+      img.style.height = `${height}px`;
+      img.style.maxWidth = 'none';
+      img.style.maxHeight = 'none';
+      img.dataset.displayWidth = String(width);
+      img.dataset.displayHeight = String(height);
+    };
+
+    const fitAllSlideImages = () => {
+      coverflowSlides.forEach((slide) => {
+        const img = slide.querySelector('img');
+        if (img?.complete && img.naturalWidth) fitSlideImage(img);
+      });
+      syncCoverflowHeight();
+    };
+
+    const syncCoverflowHeight = () => {
+      if (!coverflow) return;
+
+      const activeImg = coverflowSlides[currentSlideIndex]?.querySelector('img');
+      const fittedHeight = activeImg?.offsetHeight || Number(activeImg?.dataset.displayHeight) || 0;
+      coverflow.style.height = fittedHeight ? `${fittedHeight}px` : '100%';
+    };
+
+    const getCoverflowMetrics = () => {
+      const compact = window.matchMedia('(max-width: 820px)').matches;
+      return {
+        spacing: compact ? 170 : 220,
+        rotate: compact ? 28 : 36,
+        depth: compact ? 60 : 80,
+        scaleStep: compact ? 0.14 : 0.12,
+        minScale: compact ? 0.66 : 0.62,
+        visibleRange: compact ? 1 : 2,
+      };
+    };
+
+    const getCoverflowTransform = (offset) => {
+      if (offset === 0) {
+        return 'translate(-50%, -50%)';
+      }
+
+      const { spacing, rotate, depth, scaleStep, minScale } = getCoverflowMetrics();
+      const absOffset = Math.abs(offset);
+      const scale = Math.max(minScale, 1 - absOffset * scaleStep);
+      const translateX = offset * spacing;
+      const translateZ = -absOffset * depth;
+      const rotateY = offset * -rotate;
+
+      return `translate(-50%, -50%) translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+    };
+
+    const updateSlideCount = () => {
+      if (!currentProjectId || !projectImages[currentProjectId]) return;
+      const total = projectImages[currentProjectId].length;
+      if (slideCount) slideCount.textContent = `${currentSlideIndex + 1} / ${total}`;
+    };
+
+    const updateCoverflow = () => {
+      const { visibleRange } = getCoverflowMetrics();
+
+      coverflowSlides.forEach((slide, index) => {
+        const offset = index - currentSlideIndex;
+        const isActive = offset === 0;
+        const isHidden = Math.abs(offset) > visibleRange;
+
+        slide.classList.toggle('is-active', isActive);
+        slide.classList.toggle('is-hidden', isHidden);
+        slide.style.zIndex = String(120 - Math.abs(offset));
+        slide.style.opacity = isHidden ? '0' : (isActive ? '1' : String(Math.max(0.28, 0.72 - Math.abs(offset) * 0.14)));
+        slide.style.transform = getCoverflowTransform(offset);
+        slide.setAttribute('aria-hidden', isHidden ? 'true' : 'false');
+        slide.tabIndex = isActive ? 0 : -1;
+      });
+
+      const activeImg = coverflowSlides[currentSlideIndex]?.querySelector('img');
+      if (activeImg?.complete && activeImg.naturalWidth) {
+        fitSlideImage(activeImg);
+      }
+
+      syncCoverflowHeight();
+      updateSlideCount();
+    };
+
+    const renderCoverflow = (projectId) => {
+      coverflowTrack.innerHTML = '';
+      coverflowSlides = [];
+
       const images = projectImages[projectId] || [];
-
       images.forEach((src, index) => {
-        const thumb = document.createElement('button');
-        thumb.type = 'button';
-        thumb.className = `project-thumb${index === currentSlideIndex ? ' active' : ''}`;
-        thumb.setAttribute('aria-label', `Open screenshot ${index + 1}`);
+        const slide = document.createElement('button');
+        slide.type = 'button';
+        slide.className = 'gallery-coverflow-slide';
+        slide.setAttribute('aria-label', `View screenshot ${index + 1}`);
+
+        const card = document.createElement('div');
+        card.className = 'gallery-coverflow-card';
 
         const img = document.createElement('img');
         img.src = resolveImage(src);
         img.alt = `Project screenshot ${index + 1}`;
-        thumb.appendChild(img);
+        img.loading = index < 3 ? 'eager' : 'lazy';
+        img.decoding = 'async';
+        if (index === 0) {
+          img.fetchPriority = 'high';
+          img.decoding = 'sync';
+        }
 
-        thumb.addEventListener('click', () => {
+        const onImageReady = () => {
+          fitSlideImage(img);
+          if (index === currentSlideIndex) {
+            syncCoverflowHeight();
+            updateCoverflow();
+          }
+        };
+
+        img.addEventListener('load', onImageReady);
+        if (img.complete) onImageReady();
+
+        card.appendChild(img);
+        slide.appendChild(card);
+
+        slide.addEventListener('click', () => {
+          if (index === currentSlideIndex) return;
           currentSlideIndex = index;
-          showSlide(currentSlideIndex);
+          updateCoverflow();
         });
 
-        modalThumbs.appendChild(thumb);
+        coverflowTrack.appendChild(slide);
+        coverflowSlides.push(slide);
       });
     };
 
@@ -253,19 +389,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const images = projectImages[currentProjectId];
       if (index >= images.length) currentSlideIndex = 0;
-      if (index < 0) currentSlideIndex = images.length - 1;
+      else if (index < 0) currentSlideIndex = images.length - 1;
+      else currentSlideIndex = index;
 
-      modalImg.style.opacity = 0;
-      setTimeout(() => {
-        modalImg.src = resolveImage(images[currentSlideIndex]);
-        modalImg.style.opacity = 1;
+      updateCoverflow();
 
-        if (modalThumbs) {
-          modalThumbs.querySelectorAll('.project-thumb').forEach((thumb, thumbIndex) => {
-            thumb.classList.toggle('active', thumbIndex === currentSlideIndex);
-          });
-        }
-      }, 120);
+      const total = projectImages[currentProjectId]?.length || 0;
+      const singleImage = total <= 1;
+      if (prevBtn) prevBtn.hidden = singleImage;
+      if (nextBtn) nextBtn.hidden = singleImage;
     };
 
     const openProjectModal = (projectId) => {
@@ -274,8 +406,18 @@ document.addEventListener('DOMContentLoaded', () => {
       currentProjectId = projectId;
       currentSlideIndex = 0;
       renderProjectDetails(projectId);
-      renderProjectThumbs(projectId);
-      showSlide(currentSlideIndex);
+      renderCoverflow(projectId);
+      updateCoverflow();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          fitAllSlideImages();
+          updateCoverflow();
+        });
+      });
+      const total = projectImages[projectId]?.length || 0;
+      const singleImage = total <= 1;
+      if (prevBtn) prevBtn.hidden = singleImage;
+      if (nextBtn) nextBtn.hidden = singleImage;
       modal.style.display = 'flex';
       modal.setAttribute('aria-hidden', 'false');
       document.body.classList.add('modal-open');
@@ -291,13 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
       zone.addEventListener('click', () => {
         openProjectModal(zone.getAttribute('data-project'));
       });
-
-      zone.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          openProjectModal(zone.getAttribute('data-project'));
-        }
-      });
     });
 
     document.querySelectorAll('.project-detail-trigger').forEach((button) => {
@@ -307,8 +442,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (closeBtn) closeBtn.addEventListener('click', closeProjectModal);
-    if (prevBtn) prevBtn.addEventListener('click', () => { currentSlideIndex -= 1; showSlide(currentSlideIndex); });
-    if (nextBtn) nextBtn.addEventListener('click', () => { currentSlideIndex += 1; showSlide(currentSlideIndex); });
+    if (prevBtn) prevBtn.addEventListener('click', () => { showSlide(currentSlideIndex - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { showSlide(currentSlideIndex + 1); });
+
+    window.addEventListener('resize', () => {
+      if (modal.style.display === 'flex' && coverflowSlides.length) {
+        fitAllSlideImages();
+        updateCoverflow();
+      }
+    });
 
     modal.addEventListener('click', (event) => {
       if (event.target === modal) closeProjectModal();
@@ -316,8 +458,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('keydown', (event) => {
       if (modal.style.display !== 'flex') return;
-      if (event.key === 'ArrowRight') { currentSlideIndex += 1; showSlide(currentSlideIndex); }
-      else if (event.key === 'ArrowLeft') { currentSlideIndex -= 1; showSlide(currentSlideIndex); }
+      if (event.key === 'ArrowRight') showSlide(currentSlideIndex + 1);
+      else if (event.key === 'ArrowLeft') showSlide(currentSlideIndex - 1);
       else if (event.key === 'Escape') closeProjectModal();
     });
   }
