@@ -472,19 +472,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const bubbleCount = prefersReducedMotion ? 5 : (isMobile ? 6 : 12);
     const palette = [
       {
-        border: 'rgba(129, 140, 248, 0.38)',
-        glow: 'rgba(99, 102, 241, 0.2)',
-        fill: 'rgba(129, 140, 248, 0.14)',
+        border: 'rgba(184, 134, 58, 0.42)',
+        glow: 'rgba(184, 134, 58, 0.18)',
+        fill: 'rgba(184, 134, 58, 0.12)',
       },
       {
-        border: 'rgba(45, 212, 191, 0.36)',
-        glow: 'rgba(45, 212, 191, 0.18)',
-        fill: 'rgba(45, 212, 191, 0.12)',
+        border: 'rgba(199, 91, 57, 0.38)',
+        glow: 'rgba(199, 91, 57, 0.16)',
+        fill: 'rgba(199, 91, 57, 0.1)',
       },
       {
-        border: 'rgba(251, 146, 60, 0.34)',
-        glow: 'rgba(251, 146, 60, 0.16)',
-        fill: 'rgba(251, 146, 60, 0.1)',
+        border: 'rgba(122, 62, 72, 0.36)',
+        glow: 'rgba(122, 62, 72, 0.14)',
+        fill: 'rgba(122, 62, 72, 0.08)',
       },
     ];
 

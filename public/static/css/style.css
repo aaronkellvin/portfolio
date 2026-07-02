@@ -1,23 +1,33 @@
 :root {
-  --bg: #0f1117;
-  --bg-alt: #141820;
-  --panel: #1a1f2b;
-  --panel-2: #222836;
-  --line: #2e3545;
-  --text: #eef1f8;
-  --muted: #9aa3b5;
-  --accent: #818cf8;
-  --accent-soft: rgba(129, 140, 248, 0.16);
-  --accent-2: #2dd4bf;
-  --accent-3: #fb923c;
+  --bg: #faf6ef;
+  --bg-alt: #f2ebe0;
+  --panel: #ffffff;
+  --panel-2: #f7f1e8;
+  --line: #e5dbcc;
+  --text: #141414;
+  --muted: #6a6258;
+  --cream: #faf6ef;
+  --ink: #141414;
+  --accent: #141414;
+  --accent-2: #b8863a;
+  --accent-3: #c75b39;
+  --accent-wine: #7a3e48;
+  --accent-soft: rgba(20, 20, 20, 0.07);
+  --accent-gold-soft: rgba(184, 134, 58, 0.14);
+  --on-accent: #faf6ef;
+  --nav-bg: rgba(255, 255, 255, 0.9);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.97);
+  --nav-border: rgba(20, 20, 20, 0.08);
+  --overlay: rgba(250, 246, 239, 0.92);
+  --overlay-strong: rgba(20, 20, 20, 0.5);
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 24px;
   --radius-full: 999px;
-  --shadow-sm: 0 4px 18px rgba(0, 0, 0, 0.28);
-  --shadow-md: 0 12px 36px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.42);
-  --shadow-accent: 0 16px 44px rgba(99, 102, 241, 0.28);
+  --shadow-sm: 0 4px 18px rgba(20, 20, 20, 0.07);
+  --shadow-md: 0 12px 36px rgba(20, 20, 20, 0.09);
+  --shadow-lg: 0 24px 60px rgba(20, 20, 20, 0.11);
+  --shadow-accent: 0 16px 44px rgba(20, 20, 20, 0.14);
   --trans: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --font-display: 'Outfit', sans-serif;
   --font-body: 'DM Sans', sans-serif;
@@ -72,7 +82,7 @@ h1, h2, h3, h4 {
   width: 0%;
   height: 3px;
   z-index: 6000;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+  background: linear-gradient(90deg, var(--accent-2), var(--accent-3), var(--accent-wine));
   border-radius: 0 4px 4px 0;
 }
 
@@ -99,11 +109,11 @@ h1, h2, h3, h4 {
   inset: 0;
   background: conic-gradient(
     from 0deg at 50% 50%,
-    rgba(99, 102, 241, 0.32),
-    rgba(45, 212, 191, 0.18),
-    rgba(129, 140, 248, 0.1),
-    rgba(251, 146, 60, 0.14),
-    rgba(99, 102, 241, 0.32)
+    rgba(184, 134, 58, 0.18),
+    rgba(199, 91, 57, 0.1),
+    rgba(122, 62, 72, 0.08),
+    rgba(250, 246, 239, 0.2),
+    rgba(184, 134, 58, 0.18)
   );
 }
 
@@ -111,9 +121,9 @@ h1, h2, h3, h4 {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99, 102, 241, 0.12), transparent 55%),
-    radial-gradient(ellipse 70% 55% at 85% 70%, rgba(45, 212, 191, 0.08), transparent 50%),
-    linear-gradient(165deg, rgba(15, 17, 23, 0.72), rgba(15, 17, 23, 0.88));
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(184, 134, 58, 0.1), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 85% 70%, rgba(199, 91, 57, 0.07), transparent 50%),
+    linear-gradient(165deg, rgba(250, 246, 239, 0.55), rgba(242, 235, 224, 0.92));
 }
 
 .mesh-blob {
@@ -128,7 +138,7 @@ h1, h2, h3, h4 {
   height: min(520px, 90vw);
   top: -10%;
   left: -12%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.28) 0%, rgba(99, 102, 241, 0) 68%);
+  background: radial-gradient(circle, rgba(184, 134, 58, 0.2) 0%, rgba(184, 134, 58, 0) 68%);
   animation: blobLoop1 28s ease-in-out infinite;
 }
 
@@ -137,7 +147,7 @@ h1, h2, h3, h4 {
   height: min(420px, 75vw);
   bottom: -6%;
   right: -8%;
-  background: radial-gradient(circle, rgba(45, 212, 191, 0.2) 0%, rgba(45, 212, 191, 0) 68%);
+  background: radial-gradient(circle, rgba(199, 91, 57, 0.14) 0%, rgba(199, 91, 57, 0) 68%);
   animation: blobLoop2 32s ease-in-out infinite;
 }
 
@@ -171,28 +181,28 @@ h1, h2, h3, h4 {
   border-radius: 50%;
   pointer-events: auto;
   cursor: pointer;
-  opacity: 0.78;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  opacity: 0.72;
+  border: 1px solid rgba(20, 20, 20, 0.1);
   background: radial-gradient(
     circle at 32% 28%,
-    rgba(255, 255, 255, 0.38),
-    rgba(129, 140, 248, 0.14) 48%,
-    rgba(45, 212, 191, 0.08) 100%
+    rgba(255, 255, 255, 0.85),
+    rgba(184, 134, 58, 0.12) 48%,
+    rgba(199, 91, 57, 0.06) 100%
   );
   box-shadow:
-    inset 0 0 14px rgba(255, 255, 255, 0.16),
-    0 10px 28px rgba(99, 102, 241, 0.16);
+    inset 0 0 14px rgba(255, 255, 255, 0.5),
+    0 10px 28px rgba(20, 20, 20, 0.08);
   transform: translate(-50%, -50%);
   will-change: left, top, transform, opacity;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .bubble:hover {
-  opacity: 0.95;
+  opacity: 0.92;
   transform: translate(-50%, -50%) scale(1.08);
   box-shadow:
-    inset 0 0 16px rgba(255, 255, 255, 0.22),
-    0 14px 34px rgba(99, 102, 241, 0.24);
+    inset 0 0 16px rgba(255, 255, 255, 0.65),
+    0 14px 34px rgba(184, 134, 58, 0.16);
 }
 
 .bubble:focus-visible {
@@ -269,7 +279,7 @@ h1, h2, h3, h4 {
 .reveal-delay-3 { transition-delay: 0.24s; }
 
 .highlight {
-  background: linear-gradient(135deg, var(--accent) 0%, #818cf8 50%, var(--accent-2) 100%);
+  background: linear-gradient(135deg, var(--ink) 0%, var(--accent-2) 52%, var(--accent-3) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -283,17 +293,18 @@ h1, h2, h3, h4 {
   transform: translateX(-50%);
   z-index: 3000;
   width: min(1180px, calc(100% - 2rem));
-  background: rgba(26, 31, 43, 0.92);
-  border: 1px solid rgba(129, 140, 248, 0.12);
+  background: var(--nav-bg);
+  border: 1px solid var(--nav-border);
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
   transition: box-shadow var(--trans), background var(--trans);
+  backdrop-filter: blur(12px);
 }
 
 .navbar.scrolled {
   top: 0.65rem;
   box-shadow: var(--shadow-md);
-  background: rgba(26, 31, 43, 0.97);
+  background: var(--nav-bg-scrolled);
 }
 
 .nav-subrow {
@@ -328,9 +339,9 @@ h1, h2, h3, h4 {
   place-items: center;
   font-size: 0.95rem;
   font-weight: 800;
-  color: #fff;
-  background: linear-gradient(135deg, var(--accent), #818cf8);
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  color: var(--on-accent);
+  background: linear-gradient(135deg, var(--ink), #3a3a3a);
+  box-shadow: 0 4px 14px rgba(20, 20, 20, 0.18);
 }
 
 .nav-brand-text {
@@ -385,8 +396,8 @@ h1, h2, h3, h4 {
 }
 
 .nav-links a.active-nav {
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--accent-wine);
+  background: var(--accent-gold-soft);
 }
 
 .nav-links a::after {
@@ -396,15 +407,15 @@ h1, h2, h3, h4 {
 .btn-nav-contact {
   padding: 0.5rem 1rem !important;
   border-radius: var(--radius-full) !important;
-  background: linear-gradient(135deg, var(--accent), #6366f1) !important;
-  color: #fff !important;
-  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+  background: linear-gradient(135deg, var(--ink), #2f2f2f) !important;
+  color: var(--on-accent) !important;
+  box-shadow: var(--shadow-accent);
 }
 
 .btn-nav-contact:hover,
 .btn-nav-contact.active-nav {
-  color: #fff !important;
-  background: linear-gradient(135deg, var(--accent), #818cf8) !important;
+  color: var(--on-accent) !important;
+  background: linear-gradient(135deg, #2f2f2f, var(--ink)) !important;
   transform: translateY(-1px);
 }
 
@@ -425,7 +436,7 @@ h1, h2, h3, h4 {
 }
 
 .nav-social a:hover {
-  color: #fff;
+  color: var(--on-accent);
   background: var(--accent);
   transform: translateY(-2px);
 }
@@ -499,8 +510,8 @@ main .resume-layout {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--accent-wine);
+  background: var(--accent-gold-soft);
   padding: 0.35rem 0.85rem;
   border-radius: var(--radius-full);
   margin-bottom: 0.85rem;
@@ -521,7 +532,7 @@ main .resume-layout {
   width: 48px;
   height: 5px;
   border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  background: linear-gradient(90deg, var(--ink), var(--accent-2));
 }
 
 .page-intro {
@@ -558,7 +569,7 @@ main .resume-layout {
   position: absolute;
   inset: -14px;
   border-radius: 50%;
-  background: conic-gradient(from 200deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
+  background: conic-gradient(from 200deg, var(--ink), var(--accent-2), var(--accent-3), var(--ink));
   opacity: 0.65;
   animation: spinSlow 20s linear infinite;
   will-change: transform;
@@ -632,10 +643,10 @@ main .resume-layout {
   font-family: var(--font-display);
   font-size: clamp(1.05rem, 2.5vw, 1.35rem);
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-wine);
   margin-bottom: 1.25rem;
   padding-bottom: 0.25rem;
-  border-bottom: 2px solid var(--accent-soft);
+  border-bottom: 2px solid var(--accent-gold-soft);
 }
 
 .hero-description {
@@ -667,14 +678,14 @@ main .resume-layout {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), #6366f1);
-  color: #fff;
+  background: linear-gradient(135deg, var(--ink), #333333);
+  color: var(--on-accent);
   box-shadow: var(--shadow-accent);
 }
 
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 20px 44px rgba(99, 102, 241, 0.32);
+  box-shadow: 0 20px 44px rgba(20, 20, 20, 0.18);
 }
 
 .btn-secondary {
@@ -685,8 +696,8 @@ main .resume-layout {
 
 .btn-secondary:hover {
   transform: translateY(-3px);
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--accent-2);
+  color: var(--accent-wine);
 }
 
 .hero-stats {
@@ -715,8 +726,8 @@ main .resume-layout {
   border-radius: 10px;
   display: grid;
   place-items: center;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--accent-gold-soft);
+  color: var(--accent-wine);
   font-size: 0.85rem;
 }
 
@@ -752,7 +763,7 @@ main .resume-layout {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  background: linear-gradient(90deg, var(--ink), var(--accent-2));
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.35s ease;
@@ -774,8 +785,8 @@ main .resume-layout {
   display: grid;
   place-items: center;
   font-size: 1.15rem;
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--accent-wine);
+  background: var(--accent-gold-soft);
   margin-bottom: 1rem;
 }
 
@@ -796,7 +807,7 @@ main .resume-layout {
   margin-top: 1rem;
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-wine);
   opacity: 0;
   transform: translateX(-6px);
   transition: var(--trans);
@@ -836,7 +847,7 @@ main .resume-layout {
   border-radius: var(--radius-lg);
   border: 1px solid var(--line);
   background:
-    linear-gradient(165deg, rgba(129, 140, 248, 0.07), transparent 55%),
+    linear-gradient(165deg, rgba(184, 134, 58, 0.1), transparent 55%),
     var(--panel);
   box-shadow: var(--shadow-sm);
 }
@@ -847,7 +858,7 @@ main .resume-layout {
   width: 42px;
   height: 3px;
   border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  background: linear-gradient(90deg, var(--ink), var(--accent-2));
   margin-bottom: 1.25rem;
 }
 
@@ -912,13 +923,13 @@ main .resume-layout {
 }
 
 .skills-block:hover {
-  border-color: rgba(129, 140, 248, 0.22);
+  border-color: rgba(184, 134, 58, 0.35);
   box-shadow: var(--shadow-md);
 }
 
 .skills-block--primary {
   background:
-    linear-gradient(135deg, rgba(129, 140, 248, 0.05), rgba(45, 212, 191, 0.03)),
+    linear-gradient(135deg, rgba(184, 134, 58, 0.08), rgba(199, 91, 57, 0.04)),
     var(--panel);
 }
 
@@ -991,15 +1002,15 @@ main .resume-layout {
   gap: 0.7rem;
   padding: 1rem 0.65rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line);
+  background: var(--panel-2);
   text-align: center;
   transition: background 0.25s ease, border-color 0.25s ease;
 }
 
 .skills-stack-item:hover {
-  background: rgba(129, 140, 248, 0.06);
-  border-color: rgba(129, 140, 248, 0.2);
+  background: var(--accent-gold-soft);
+  border-color: rgba(184, 134, 58, 0.35);
 }
 
 .skills-stack-icon {
@@ -1036,7 +1047,7 @@ main .resume-layout {
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--text);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--line);
   transition: color 0.2s ease, padding-left 0.2s ease;
 }
 
@@ -1058,7 +1069,7 @@ main .resume-layout {
 }
 
 .skills-list li:hover {
-  color: var(--accent);
+  color: var(--accent-wine);
   padding-left: 1.15rem;
 }
 
@@ -1069,7 +1080,7 @@ main .resume-layout {
 }
 
 .skills-list--grid li {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--line);
 }
 
 .tags {
@@ -1128,7 +1139,7 @@ main .resume-layout {
 
 .project-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(129, 140, 248, 0.28);
+  border-color: rgba(184, 134, 58, 0.45);
   box-shadow: var(--shadow-md);
 }
 
@@ -1154,7 +1165,7 @@ main .resume-layout {
 .project-card-media-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(15, 17, 23, 0.82), rgba(15, 17, 23, 0.08) 55%);
+  background: linear-gradient(to top, rgba(20, 20, 20, 0.72), rgba(20, 20, 20, 0.06) 55%);
   opacity: 0.75;
   transition: opacity 0.35s ease;
 }
@@ -1168,10 +1179,10 @@ main .resume-layout {
   gap: 0.45rem;
   padding: 0.5rem 0.9rem;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(20, 20, 20, 0.1);
   backdrop-filter: blur(8px);
-  color: #fff;
+  color: var(--ink);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -1216,7 +1227,7 @@ main .resume-layout {
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: var(--accent);
+  color: var(--accent-2);
 }
 
 .project-info h3 {
@@ -1273,9 +1284,9 @@ main .resume-layout {
 }
 
 .project-detail-trigger:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(129, 140, 248, 0.06);
+  border-color: var(--accent-2);
+  color: var(--accent-wine);
+  background: var(--accent-gold-soft);
 }
 
 .project-detail-trigger:hover i {
@@ -1291,8 +1302,8 @@ main .resume-layout {
   padding: clamp(0.35rem, 1vw, 0.75rem);
   align-items: center;
   justify-content: center;
-  background: rgba(6, 8, 14, 0.88);
-  backdrop-filter: blur(8px);
+  background: var(--overlay);
+  backdrop-filter: blur(10px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   pointer-events: auto;
@@ -1429,21 +1440,23 @@ body.modal-open {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(8, 10, 16, 0.55);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(8px);
-  color: #fff;
+  color: var(--ink);
   font-size: 0.82rem;
   cursor: pointer;
   transition: var(--trans);
   display: grid;
   place-items: center;
   z-index: 200;
+  box-shadow: var(--shadow-sm);
 }
 
 .gallery-nav:hover {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-accent);
   transform: translateY(-50%) scale(1.04);
 }
 
@@ -1466,13 +1479,15 @@ body.modal-open {
   transform: translateX(-50%);
   padding: 0.32rem 0.65rem;
   border-radius: var(--radius-full);
-  background: rgba(8, 10, 16, 0.55);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line);
   backdrop-filter: blur(8px);
   font-size: 0.74rem;
   font-weight: 700;
   color: var(--text);
   font-variant-numeric: tabular-nums;
   pointer-events: none;
+  box-shadow: var(--shadow-sm);
 }
 
 .gallery-details {
@@ -1484,9 +1499,10 @@ body.modal-open {
   max-height: min(92dvh, 940px);
   padding: 0.95rem 1rem 1rem;
   border-radius: calc(var(--radius-lg) + 2px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(12, 15, 24, 0.78);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
@@ -1499,8 +1515,8 @@ body.modal-open {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  background: var(--panel-2);
   color: var(--text);
   font-size: 0.9rem;
   cursor: pointer;
@@ -1611,7 +1627,7 @@ body.modal-open {
 .contact-social-link:hover {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .contact-details .field {
@@ -1632,7 +1648,7 @@ body.modal-open {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-wine);
   margin-bottom: 0.35rem;
 }
 
@@ -1643,7 +1659,7 @@ body.modal-open {
 }
 
 .contact-details .value a:hover {
-  color: var(--accent);
+  color: var(--accent-wine);
 }
 
 /* EXPERIENCE */
@@ -1663,7 +1679,7 @@ body.modal-open {
 }
 
 .experience-heading i {
-  color: var(--accent);
+  color: var(--accent-2);
 }
 
 .timeline-card {
@@ -1685,7 +1701,7 @@ body.modal-open {
   bottom: 1.5rem;
   width: 4px;
   border-radius: 4px;
-  background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+  background: linear-gradient(to bottom, var(--ink), var(--accent-2));
 }
 
 .timeline-card:hover {
@@ -1703,7 +1719,7 @@ body.modal-open {
 .timeline-date {
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-wine);
 }
 
 .timeline-badge {
@@ -1713,13 +1729,13 @@ body.modal-open {
   text-transform: uppercase;
   padding: 0.22rem 0.6rem;
   border-radius: var(--radius-full);
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--accent-gold-soft);
+  color: var(--accent-wine);
 }
 
 .timeline-badge-alt {
-  background: rgba(20, 184, 166, 0.12);
-  color: var(--accent-2);
+  background: rgba(199, 91, 57, 0.12);
+  color: var(--accent-3);
 }
 
 .timeline-card h3 {
@@ -1766,7 +1782,7 @@ body.modal-open {
 .info-card h4 {
   font-size: 0.95rem;
   margin-bottom: 0.75rem;
-  color: var(--accent);
+  color: var(--accent-wine);
 }
 
 /* CERTIFICATIONS */
@@ -1793,7 +1809,7 @@ body.modal-open {
 .cert-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(99, 102, 241, 0.25);
+  border-color: rgba(184, 134, 58, 0.4);
 }
 
 .cert-icon {
@@ -1803,8 +1819,8 @@ body.modal-open {
   border-radius: 14px;
   display: grid;
   place-items: center;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--accent-gold-soft);
+  color: var(--accent-wine);
   font-size: 1.15rem;
 }
 
@@ -1877,7 +1893,7 @@ body.modal-open {
 }
 
 .resume-page + .resume-page {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--line);
 }
 
 .resume-page-canvas {
@@ -1977,7 +1993,7 @@ body.modal-open {
     padding: 0.85rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--line);
-    background: rgba(26, 31, 43, 0.98);
+    background: var(--nav-bg-scrolled);
     box-shadow: var(--shadow-lg);
     z-index: 2600;
     opacity: 0;
@@ -2040,7 +2056,7 @@ body.modal-open {
   .nav-mobile-social a:hover,
   .nav-mobile-social a:active {
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent);
   }
 
   .nav-social {
