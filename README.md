@@ -1,62 +1,101 @@
-# Flask Portfolio
+# Kellvin Aaron Ocampo — Portfolio
 
-This project is a simple Flask web application that serves a portfolio page showcasing video editing and AI content creation services.
+Personal portfolio built with **React**, **Node.js (Express)**, and **Tailwind CSS**.
 
-## Project Structure
+## Stack
+
+| Layer | Tech |
+|-------|------|
+| Frontend | React 19, React Router, Vite, Tailwind CSS |
+| Backend | Node.js, Express |
+| Assets | `public/static/` (images, resume PDF) |
+| Deploy | Vercel |
+
+## Project structure
 
 ```
-flask-portfolio
-├── app.py                # Main entry point of the Flask application
-├── requirements.txt      # Lists dependencies for the project
-├── .gitignore            # Specifies files and directories to ignore by Git
-├── templates
-│   └── portfolio.html    # HTML content for the portfolio page
-├── static
-│   ├── css
-│   │   └── style.css     # CSS styles for the portfolio page
-│   └── js
-│       └── main.js       # JavaScript for interactive features
-└── README.md             # Documentation for the project
+portfolio/
+├── client/              React + Tailwind (Vite) — primary app
+├── server/              Express API + static file serving
+├── api/                 Vercel serverless entry
+├── templates/           HTML page templates (Jinja2)
+├── public/static/css/   Site stylesheet
+├── public/static/js/    Site JavaScript
+├── public/static/images/ Images
+├── public/static/uploads/ Resume PDF
+└── assets/              Bundled resume fallback
 ```
 
-## Setup Instructions
+The **React app** (`client/`) is the main stack for development and deployment. The **HTML templates**, **CSS**, and **JavaScript** in `templates/` and `public/static/` are kept in the repo as the original site source.
 
-1. **Clone the repository:**
-   ```
-   git clone <repository-url>
-   cd flask-portfolio
-   ```
+## Setup
 
-2. **Create a virtual environment:**
-   ```
-   python -m venv venv
-   ```
+### 1. Install Node.js
 
-3. **Activate the virtual environment:**
-   - On Windows:
-     ```
-     venv\Scripts\activate
-     ```
-   - On macOS/Linux:
-     ```
-     source venv/bin/activate
-     ```
+Download and install **Node.js LTS** from [https://nodejs.org](https://nodejs.org), then restart your terminal.
 
-4. **Install the required dependencies:**
-   ```
-   pip install -r requirements.txt
-   ```
+Verify:
 
-5. **Run the application:**
-   ```
-   python app.py
-   ```
+```bash
+node -v
+npm -v
+```
 
-6. **Open your web browser and go to:**
-   ```
-   http://127.0.0.1:5000
-   ```
+### 2. Install dependencies
 
-## Overview
+```bash
+npm run install:all
+```
 
-This Flask application is designed to showcase the skills and services of Kellvin Aaron Ocampo, a video editor and AI content creator. The portfolio page includes information about services offered, skills, and contact options. The design is responsive and visually appealing, making use of modern web technologies.
+### 3. Run locally
+
+**Terminal 1 — API server:**
+
+```bash
+npm run dev --prefix server
+```
+
+**Terminal 2 — React dev server:**
+
+```bash
+npm run dev --prefix client
+```
+
+Open **http://127.0.0.1:5173**
+
+### Production build
+
+```bash
+npm run build
+npm start
+```
+
+Open **http://127.0.0.1:5000**
+
+## Resume PDF
+
+Place your resume in both locations (keep them in sync):
+
+- `assets/resume.pdf`
+- `public/static/uploads/resume.pdf`
+
+Then commit and push for deployment.
+
+## Deploy to Vercel
+
+1. Push to GitHub
+2. Import the repo in Vercel
+3. Build command: `npm run build`
+4. Install command: `npm run install:all`
+
+The Express server handles `/api`, `/resume`, `/static`, and SPA routing.
+
+## Pages
+
+- `/` — Home
+- `/skills` — Technical skills + AI tools
+- `/projects` — Featured projects with gallery modal
+- `/experience` — Work history & education
+- `/certifications` — Certifications & awards
+- `/resume` — PDF viewer
+- `/contact` — Contact details

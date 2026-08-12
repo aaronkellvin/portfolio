@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-gradient-to-br from-cream to-cream-alt font-body text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-bold tracking-tight text-ink;
+  }
+
+  p {
+    @apply text-muted;
+  }
+}
+
+@layer components {
+  .section {
+    @apply px-[5%] py-16 md:py-20;
+  }
+
+  .page-section {
+    @apply min-h-[calc(100vh-120px)] pt-32;
+  }
+
+  .section-kicker {
+    @apply mb-3 inline-flex items-center rounded-full bg-gold-soft px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-wine;
+  }
+
+  .page-intro {
+    @apply mt-4 max-w-[52ch] text-base leading-7 text-muted;
+  }
+
+  .underline-bar {
+    @apply mt-3 h-1.5 w-12 rounded-full bg-gradient-to-r from-ink to-gold;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-ink to-ink-soft px-6 py-3 text-sm font-bold text-cream shadow-accent transition hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-line bg-cream-panel px-6 py-3 text-sm font-bold text-ink transition hover:-translate-y-0.5 hover:border-gold hover:text-wine;
+  }
+
+  .panel {
+    @apply rounded-2xl border border-line bg-cream-panel shadow-soft;
+  }
+
+  .highlight-text {
+    @apply bg-gradient-to-br from-ink via-gold to-terracotta bg-clip-text text-transparent;
+  }
+}
+
+@layer utilities {
+  .reveal {
+    @apply translate-y-7 opacity-0 transition duration-700 ease-out;
+  }
+
+  .revealed {
+    @apply translate-y-0 opacity-100;
+  }
+}
+
+body.modal-open {
+  @apply overflow-hidden;
+}
