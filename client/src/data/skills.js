@@ -17,13 +17,13 @@ export const SKILL_SECTIONS = [
     num: '02',
     label: 'Interface',
     title: 'Frontend Development',
-    items: ['HTML5', 'CSS3', 'JavaScript', 'Tailwind CSS', 'Responsive Design'],
+    items: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Tailwind CSS', 'Responsive Design'],
   },
   {
     num: '03',
     label: 'Server',
     title: 'Backend Development',
-    items: ['REST APIs', 'SQL & MySQL', 'Database Design', 'Data Validation', 'Server-side Logic'],
+    items: ['Node.js', 'REST APIs', 'SQL & MySQL', 'Database Design', 'Data Validation', 'Server-side Logic'],
   },
   {
     num: '04',
@@ -44,7 +44,7 @@ export const SKILL_SECTIONS = [
     label: 'Build',
     title: 'Frameworks & Libraries',
     compact: true,
-    items: ['Flask', 'Flask-SQLAlchemy', 'Pandas', 'Android SDK', 'Werkzeug'],
+    items: ['React', 'Node.js', 'Flask', 'Flask-SQLAlchemy', 'Pandas', 'Android SDK', 'Werkzeug'],
   },
   {
     num: '06',
