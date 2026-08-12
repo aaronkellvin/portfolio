@@ -15,18 +15,13 @@ Personal portfolio built with **React**, **Node.js (Express)**, and **Tailwind C
 
 ```
 portfolio/
-├── client/              React + Tailwind (Vite) — primary app
-├── server/              Express API + static file serving
-├── api/                 Vercel serverless entry
-├── templates/           HTML page templates (Jinja2)
-├── public/static/css/   Site stylesheet
-├── public/static/js/    Site JavaScript
-├── public/static/images/ Images
-├── public/static/uploads/ Resume PDF
-└── assets/              Bundled resume fallback
+├── client/                 React + Tailwind (Vite)
+├── server/                 Express API + static serving
+├── api/                    Vercel serverless entry
+├── public/static/images/   Profile & project images
+├── public/static/uploads/  Resume PDF
+└── assets/                 Resume fallback for API
 ```
-
-The **React app** (`client/`) is the main stack for development and deployment. The **HTML templates**, **CSS**, and **JavaScript** in `templates/` and `public/static/` are kept in the repo as the original site source.
 
 ## Setup
 
